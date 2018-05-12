@@ -1,2 +1,4 @@
 node_modules
 statement.csv
+config.js
+*.swp
