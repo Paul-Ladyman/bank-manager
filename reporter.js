@@ -1,3 +1,5 @@
+const config = require('./config');
+
 function reportByMonth(month, breakdown) {
   console.log(`${month}`);
 
@@ -28,7 +30,7 @@ function reportByMonth(month, breakdown) {
   }
 
   if (breakdown.spendingWarnings.length > 0) {
-    console.log('\tSpending Warnings:');
+    console.log(`\tSpending Warnings (> £${parseFloat(config.spendingLimit)}):`);
     breakdown.spendingWarnings.forEach((warning) => {
       console.log(`\t\t${warning['Transaction Description']} - £${warning['Debit Amount']}`);
     });
