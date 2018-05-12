@@ -17,7 +17,7 @@ A command line tool to provide an easily digestible view of your banking activit
 
 ## Configuration
 
-Provide a config file at `./config` with the following format:
+Provide a config file at `./config.js` with the following format:
 
 ```
 module.exports = {
