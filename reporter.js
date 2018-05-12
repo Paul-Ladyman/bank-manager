@@ -36,7 +36,7 @@ function reportByMonth(month, breakdown) {
     });
   }
 
-  console.log(`\tLargest Debit (ex. rent):\n\t\t${breakdown.largestDebit['Transaction Description']} - £${breakdown.largestDebit['Debit Amount']}`);
+  console.log(`\tLargest Debit (excl. rent):\n\t\t${breakdown.largestDebit['Transaction Description']} - £${breakdown.largestDebit['Debit Amount']}`);
 
   console.log(`\tFinal Balance: £${breakdown.finalBalance}`);
 }
