@@ -48,6 +48,10 @@ function statementIsBill(statement) {
   return config.bills.findIndex((bill) => (statement['Transaction Description'].includes(bill))) > -1;
 }
 
+function statementIsInSpendingBlacklist(statement) {
+  return config.spendingBlacklist.findIndex((item) => (statement['Transaction Description'].includes(item))) > -1;
+}
+
 function getStatementMonth(statement) {
   const dateParts = statement['Transaction Date'].split('/')
   const rawDate = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]} 01:00:00`;
@@ -55,9 +59,15 @@ function getStatementMonth(statement) {
   return months[date.getMonth()];
 }
 
+function debitAmountExceeds(statement, limit) {
+  return parseFloat(statement['Debit Amount']) > parseFloat(limit);
+}
+
 module.exports = {
   getStatementsByMonth: getStatementsByMonth,
   statementIsRent: statementIsRent,
   statementIsWage: statementIsWage,
-  statementIsBill: statementIsBill
+  statementIsBill: statementIsBill,
+  statementIsInSpendingBlacklist: statementIsInSpendingBlacklist,
+  debitAmountExceeds: debitAmountExceeds
 };

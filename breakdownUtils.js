@@ -1,4 +1,5 @@
 const statementUtils = require('./statementUtils');
+const config = require('./config');
 
 function getLargestDebit(statement, breakdown) {
   if (statementUtils.statementIsRent(statement)) {
@@ -42,11 +43,24 @@ function getRent(statement, breakdown) {
 
 }
 
+function getSpendingWarnings(statement, breakdown) {
+  const spendingWarning = !statementUtils.statementIsBill(statement) &&
+    !statementUtils.statementIsRent(statement) &&
+    !statementUtils.statementIsInSpendingBlacklist(statement) &&
+    statementUtils.debitAmountExceeds(statement, config.spendingLimit);
+
+  if (spendingWarning) {
+    return breakdown.spendingWarnings.concat([statement]);
+  }
+  return breakdown.spendingWarnings;
+}
+
 function getMonthBreakdown(statements, breakdown) {
   if (!breakdown) {
     breakdown = {
       credits: [],
-      bills: []
+      bills: [],
+      spendingWarnings: []
     };
   }
 
@@ -61,7 +75,8 @@ function getMonthBreakdown(statements, breakdown) {
     credits: getCredits(statement, breakdown),
     wage: getWage(statement, breakdown),
     rent: getRent(statement, breakdown),
-    bills: getBills(statement, breakdown)
+    bills: getBills(statement, breakdown),
+    spendingWarnings: getSpendingWarnings(statement, breakdown)
   });
   return getMonthBreakdown(newStatements, newBreakdown);
 }
