@@ -40,7 +40,17 @@ function getRent(statement, breakdown) {
     return statement['Debit Amount'];
   }
   return breakdown.rent;
+}
 
+function getBalanceBeforeWage(statements, breakdown) {
+  if (statements.length > 1 && statementUtils.statementIsWage(statements[0])) {
+    return statements[1]['Balance'];
+  }
+  return breakdown.balanceBeforeWage;
+}
+
+function getFinalBalance(statement, breakdown) {
+  return breakdown.finalBalance || statement['Balance'];
 }
 
 function getSpendingWarnings(statement, breakdown) {
@@ -71,8 +81,10 @@ function getMonthBreakdown(statements, breakdown) {
   const statement = statements[0];
   const newStatements = statements.slice(1);
   const newBreakdown = Object.assign({}, breakdown, {
+    finalBalance: getFinalBalance(statement, breakdown), 
     largestDebit: getLargestDebit(statement, breakdown),
     credits: getCredits(statement, breakdown),
+    balanceBeforeWage: getBalanceBeforeWage(statements, breakdown),
     wage: getWage(statement, breakdown),
     rent: getRent(statement, breakdown),
     bills: getBills(statement, breakdown),

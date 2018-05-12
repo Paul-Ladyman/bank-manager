@@ -1,7 +1,10 @@
 function reportByMonth(month, breakdown) {
   console.log(`${month}`);
-  const largestDebit = breakdown.largestDebit;
-  
+
+  if (breakdown.balanceBeforeWage) {
+    console.log(`\tBalance Before Wage: £${breakdown.balanceBeforeWage}`);
+  }
+
   if (breakdown.wage) {
     console.log(`\tWage: £${breakdown.wage}`);
   }
@@ -10,7 +13,7 @@ function reportByMonth(month, breakdown) {
     console.log(`\tRent: £${breakdown.rent}`);
   }
 
-  console.log(`\tLargest debit: ${largestDebit['Transaction Description']} - £${largestDebit['Debit Amount']}`);
+  console.log(`\tLargest Debit (ex. rent):\n\t\t${breakdown.largestDebit['Transaction Description']} - £${breakdown.largestDebit['Debit Amount']}`);
 
   if (breakdown.credits.length > 0) {
     console.log('\tCredits:');
@@ -32,6 +35,8 @@ function reportByMonth(month, breakdown) {
       console.log(`\t\t${warning['Transaction Description']} - £${warning['Debit Amount']}`);
     });
   }
+
+  console.log(`\tFinal Balance: £${breakdown.finalBalance}`);
 }
 
 module.exports = {
