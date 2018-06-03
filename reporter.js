@@ -22,11 +22,20 @@ function reportByMonth(month, breakdown) {
     console.log(`\tRent: £${breakdown.rent}`);
   }
 
+  if (breakdown.utilities.length > 0) {
+    console.log('\tUtilities:');
+    breakdown.utilities.forEach((utility) => {
+      console.log(`\t\t${utility['Transaction Description']} - £${utility['Debit Amount']}`);
+    });
+    console.log(`\t\tTotal - £${breakdown.utilitiesTotal.toFixed(2)}`);
+  }
+
   if (breakdown.bills.length > 0) {
-    console.log('\tBills:');
+    console.log('\tOther Bills:');
     breakdown.bills.forEach((bill) => {
       console.log(`\t\t${bill['Transaction Description']} - £${bill['Debit Amount']}`);
     });
+    console.log(`\t\tTotal - £${breakdown.billsTotal.toFixed(2)}`);
   }
 
   if (breakdown.spendingWarnings.length > 0) {

@@ -28,6 +28,27 @@ function getBills(statement, breakdown) {
   return breakdown.bills;
 }
 
+function sumBills(statement, breakdown) {
+  if (statementUtils.statementIsBill(statement)) {
+    return breakdown.billsTotal + parseFloat(statement['Debit Amount']);
+  }
+  return breakdown.billsTotal;
+}
+
+function getUtilities(statement, breakdown) {
+  if (statementUtils.statementIsUtility(statement)) {
+    return breakdown.utilities.concat([statement]);
+  }
+  return breakdown.utilities;
+}
+
+function sumUtilities(statement, breakdown) {
+  if (statementUtils.statementIsUtility(statement)) {
+    return breakdown.utilitiesTotal + parseFloat(statement['Debit Amount']);
+  }
+  return breakdown.utilitiesTotal;
+}
+
 function getWage(statement, breakdown) {
   if (statementUtils.statementIsWage(statement)) {
     return statement['Credit Amount'];
@@ -54,7 +75,9 @@ function getFinalBalance(statement, breakdown) {
 }
 
 function getSpendingWarnings(statement, breakdown) {
-  const spendingWarning = !statementUtils.statementIsBill(statement) &&
+  const spendingWarning =
+    !statementUtils.statementIsUtility(statement) &&
+    !statementUtils.statementIsBill(statement) &&
     !statementUtils.statementIsRent(statement) &&
     !statementUtils.statementIsInSpendingBlacklist(statement) &&
     statementUtils.debitAmountExceeds(statement, config.spendingLimit);
@@ -70,6 +93,9 @@ function getMonthBreakdown(statements, breakdown) {
     breakdown = {
       credits: [],
       bills: [],
+      billsTotal: 0.00,
+      utilitiesTotal: 0.00,
+      utilities: [],
       spendingWarnings: []
     };
   }
@@ -88,6 +114,9 @@ function getMonthBreakdown(statements, breakdown) {
     wage: getWage(statement, breakdown),
     rent: getRent(statement, breakdown),
     bills: getBills(statement, breakdown),
+    billsTotal: sumBills(statement, breakdown),
+    utilities: getUtilities(statement, breakdown),
+    utilitiesTotal: sumUtilities(statement, breakdown),
     spendingWarnings: getSpendingWarnings(statement, breakdown)
   });
   return getMonthBreakdown(newStatements, newBreakdown);

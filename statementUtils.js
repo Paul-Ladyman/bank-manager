@@ -48,6 +48,10 @@ function statementIsBill(statement) {
   return config.bills.findIndex((bill) => (statement['Transaction Description'].includes(bill))) > -1;
 }
 
+function statementIsUtility(statement) {
+  return config.utilities.findIndex((utility) => (statement['Transaction Description'].includes(utility))) > -1;
+}
+
 function statementIsInSpendingBlacklist(statement) {
   return config.spendingBlacklist.findIndex((item) => (statement['Transaction Description'].includes(item))) > -1;
 }
@@ -68,6 +72,7 @@ module.exports = {
   statementIsRent: statementIsRent,
   statementIsWage: statementIsWage,
   statementIsBill: statementIsBill,
+  statementIsUtility: statementIsUtility,
   statementIsInSpendingBlacklist: statementIsInSpendingBlacklist,
   debitAmountExceeds: debitAmountExceeds
 };
