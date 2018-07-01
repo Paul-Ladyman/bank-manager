@@ -23,6 +23,7 @@ Provide a config file at `./config.js` with the following format:
 module.exports = {
   rent: '<transaction-description>',
   wage: '<transaction-description>',
+  transport: '<transaction-description>',
   utilities: [
     '<transaction-description>'
   ],
@@ -38,6 +39,7 @@ module.exports = {
 
 * `rent` - the transaction description for your rent statement, i.e. who you pay you rent to.
 * `wage` - the transaction descripton for your wage statement, i.e. who pays your wage.
+* `transport` - the transaction description for your transport costs, i.e. who you regularly pay for transport (e.g. TFL). This debit will be counted cumulatively over the month.
 * `utilities` - a list of transaction descriptions for your utility bill statements, i.e. who do you pay your utility bills (water, gas/electricity etc) to.
 * `bills` - a list of transaction descriptions for your other bill statements, i.e. who do you pay any other bills (streaming service subscriptions etc) to.
 * `spendingLimit` - a value above which debit statements will be included in the report as warnings.
@@ -46,3 +48,9 @@ module.exports = {
 ## Usage
 
 Provide a CSV export from your online banking service at `./statement.csv` then run `node index.js`.
+
+## TODO
+
+* handle multiple debits to same account
+* add warning for number of debits to same account
+* add example of statement.csv
