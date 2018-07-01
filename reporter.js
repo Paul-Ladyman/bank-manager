@@ -1,53 +1,80 @@
+const chalk = require('chalk');
 const config = require('./config');
 
+function logMonth(month) {
+  console.log(chalk.magenta(month));
+}
+
+function logCredit(credit) {
+  console.log(chalk.green(credit));
+}
+
+function logDebit(debit) {
+  console.log(chalk.blue(debit));
+}
+
+function logBalance(balance) {
+  console.log(chalk.bgGreen(chalk.black(balance)));
+}
+
+function logWarning(warning) {
+  console.log(chalk.red(warning));
+}
+
 function reportByMonth(month, breakdown) {
-  console.log(`${month}`);
+  logMonth(`${month}`);
 
   if (breakdown.balanceBeforeWage) {
-    console.log(`\tBalance Before Wage: £${breakdown.balanceBeforeWage}`);
+    process.stdout.write('\t');
+    logBalance(`Balance Before Wage: £${breakdown.balanceBeforeWage}`);
   }
 
   if (breakdown.wage) {
-    console.log(`\tWage: £${breakdown.wage}`);
+    logCredit(`\tWage: £${breakdown.wage}`);
   }
 
   if (breakdown.credits.length > 0) {
-    console.log('\tOther Credits:');
+    logCredit('\tOther Credits:');
     breakdown.credits.forEach((credit) => {
-      console.log(`\t\t${credit['Transaction Description']} - £${credit['Credit Amount']}`);
+      logCredit(`\t\t${credit['Transaction Description']} - £${credit['Credit Amount']}`);
     });
   }
 
   if (breakdown.rent) {
-    console.log(`\tRent: £${breakdown.rent}`);
+    logDebit(`\tRent: £${breakdown.rent}`);
+  }
+
+  if (breakdown.transportTotal) {
+    logDebit(`\tTransport: £${breakdown.transportTotal.toFixed(2)}`);
   }
 
   if (breakdown.utilities.length > 0) {
-    console.log('\tUtilities:');
+    logDebit('\tUtilities:');
     breakdown.utilities.forEach((utility) => {
-      console.log(`\t\t${utility['Transaction Description']} - £${utility['Debit Amount']}`);
+      logDebit(`\t\t${utility['Transaction Description']} - £${utility['Debit Amount']}`);
     });
-    console.log(`\t\tTotal - £${breakdown.utilitiesTotal.toFixed(2)}`);
+    logDebit(`\t\tTotal - £${breakdown.utilitiesTotal.toFixed(2)}`);
   }
 
   if (breakdown.bills.length > 0) {
-    console.log('\tOther Bills:');
+    logDebit('\tOther Bills:');
     breakdown.bills.forEach((bill) => {
-      console.log(`\t\t${bill['Transaction Description']} - £${bill['Debit Amount']}`);
+      logDebit(`\t\t${bill['Transaction Description']} - £${bill['Debit Amount']}`);
     });
-    console.log(`\t\tTotal - £${breakdown.billsTotal.toFixed(2)}`);
+    logDebit(`\t\tTotal - £${breakdown.billsTotal.toFixed(2)}`);
   }
 
   if (breakdown.spendingWarnings.length > 0) {
-    console.log(`\tSpending Warnings (> £${parseFloat(config.spendingLimit)}):`);
+    logWarning(`\tSpending Warnings (> £${parseFloat(config.spendingLimit)}):`);
     breakdown.spendingWarnings.forEach((warning) => {
-      console.log(`\t\t${warning['Transaction Description']} - £${warning['Debit Amount']}`);
+      logWarning(`\t\t${warning['Transaction Description']} - £${warning['Debit Amount']}`);
     });
   }
 
-  console.log(`\tLargest Debit (excl. rent):\n\t\t${breakdown.largestDebit['Transaction Description']} - £${breakdown.largestDebit['Debit Amount']}`);
+  logDebit(`\tLargest Debit (excl. rent):\n\t\t${breakdown.largestDebit['Transaction Description']} - £${breakdown.largestDebit['Debit Amount']}`);
 
-  console.log(`\tFinal Balance: £${breakdown.finalBalance}`);
+  process.stdout.write('\t');
+  logBalance(`Final Balance: £${breakdown.finalBalance}`);
 }
 
 module.exports = {

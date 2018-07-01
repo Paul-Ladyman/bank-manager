@@ -44,6 +44,10 @@ function statementIsWage(statement) {
   return statement['Transaction Description'] === config.wage;
 }
 
+function statementIsTransport(statement) {
+  return statement['Transaction Description'] === config.transport;
+}
+
 function statementIsBill(statement) {
   return config.bills.findIndex((bill) => (statement['Transaction Description'].includes(bill))) > -1;
 }
@@ -74,5 +78,6 @@ module.exports = {
   statementIsBill: statementIsBill,
   statementIsUtility: statementIsUtility,
   statementIsInSpendingBlacklist: statementIsInSpendingBlacklist,
-  debitAmountExceeds: debitAmountExceeds
+  debitAmountExceeds: debitAmountExceeds,
+  statementIsTransport: statementIsTransport
 };

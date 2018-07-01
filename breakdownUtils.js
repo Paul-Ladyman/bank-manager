@@ -49,6 +49,13 @@ function sumUtilities(statement, breakdown) {
   return breakdown.utilitiesTotal;
 }
 
+function sumTransport(statement, breakdown) {
+  if (statementUtils.statementIsTransport(statement)) {
+    return breakdown.transportTotal + parseFloat(statement['Debit Amount']);
+  }
+  return breakdown.transportTotal;
+}
+
 function getWage(statement, breakdown) {
   if (statementUtils.statementIsWage(statement)) {
     return statement['Credit Amount'];
@@ -96,6 +103,7 @@ function getMonthBreakdown(statements, breakdown) {
       billsTotal: 0.00,
       utilitiesTotal: 0.00,
       utilities: [],
+      transportTotal: 0.00,
       spendingWarnings: []
     };
   }
@@ -117,6 +125,7 @@ function getMonthBreakdown(statements, breakdown) {
     billsTotal: sumBills(statement, breakdown),
     utilities: getUtilities(statement, breakdown),
     utilitiesTotal: sumUtilities(statement, breakdown),
+    transportTotal: sumTransport(statement, breakdown),
     spendingWarnings: getSpendingWarnings(statement, breakdown)
   });
   return getMonthBreakdown(newStatements, newBreakdown);
