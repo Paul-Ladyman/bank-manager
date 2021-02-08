@@ -11,15 +11,49 @@
   <body>
     <div class="header">
       <h1 class="header-item header-item__title">Bank Manager</h1>
-      <div class="header-item header-item__tab">Report</div>
-      <div class="header-item header-item__tab">Graphs</div>
+      <div
+        class="header-item header-item__tab"
+        id="report-tab"
+        onclick="tabSwitcher('report')"
+      >
+        Report
+      </div>
+      <div
+        class="header-item header-item__tab"
+        id="graphs-tab"
+        onclick="tabSwitcher('graphs')"
+      >
+        Graphs
+      </div>
     </div>
 
     <div class="report" id="report"></div>
 
-    <div id="graphs"></div>
+    <div class="hidden" id="graphs">
+      <div id="vega"></div>
+    </div>
 
     <script type="text/javascript" src="report.js"></script>
     <script type="text/javascript" src="graphs.js"></script>
+    <script type="text/javascript">
+      function tabSwitcher(selection) {
+        var toHide;
+        var toShow;
+        if (selection === 'report') {
+          toHide = 'graphs';
+          toShow = 'report';
+        }
+
+        if (selection === 'graphs') {
+          toHide = 'report';
+          toShow = 'graphs';
+        }
+
+        document.getElementById(toHide).classList.add('hidden');
+        document.getElementById(`${toHide}-tab`).classList.remove('active');
+        document.getElementById(toShow).classList.remove('hidden');
+        document.getElementById(`${toShow}-tab`).classList.add('active');
+      }
+    </script>
   </body>
 </html>

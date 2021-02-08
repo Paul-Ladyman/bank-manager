@@ -14,12 +14,12 @@ body {
 }
 
 .header-item {
-  margin: 0 5px;
+  padding: 0 5px;
+  margin: 0;
   font-size: 1.5em;
   display: flex;
   align-items: center;
   border-right: 2px solid #822000;
-  padding-right: 5px;
 }
 
 .header-item__title {
@@ -28,6 +28,12 @@ body {
 
 .header-item__tab {
   padding-top: 6px;
+  cursor: pointer;
+}
+
+.header-item__tab:hover {
+  background-color:#fcf6eb;
+  text-decoration: underline;
 }
 
 .report {
@@ -58,4 +64,13 @@ body {
 
 .report-item__indented {
   margin-left: 40px;
+}
+
+.hidden {
+  display: none;
+}
+
+.active {
+  background-color:#fcf6eb;
+  text-decoration: underline;
 }

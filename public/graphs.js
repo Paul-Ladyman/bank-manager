@@ -8,4 +8,4 @@ var yourVlSpec = {
     y: {field: 'balanceBeforeWage', type: 'quantitative'}
   }
 }
-vegaEmbed('#graphs', yourVlSpec);
+vegaEmbed('#vega', yourVlSpec);
