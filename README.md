@@ -47,7 +47,7 @@ module.exports = {
 
 ## Usage
 
-Provide a CSV export from your online banking service at `./statement.csv` then run `npm start`.
+Provide any of CSV export files from your online banking service in the `statements` directory then run `npm start`.
 
 ## TODO
 

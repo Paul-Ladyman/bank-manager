@@ -1,13 +1,14 @@
 const csv = require("csvtojson");
 const fs = require('fs');
-const reporter = require('./reporter');
 const statementUtils = require('./statementUtils');
 const breakdownUtils = require('./breakdownUtils');
 const { spendingLimit } = require('./config');
+const statementsFolder = './statements/';
 
-csv()
-  .fromFile('./statement.csv')
-  .on("end_parsed", function(statements) { 
+function ingestData(file) {
+  csv()
+  .fromFile(`${statementsFolder}${file}`)
+  .on("end_parsed", function(statements) {
     const statementsByMonth = statementUtils.getStatementsByMonth(statements, {});
     const months = Object.keys(statementsByMonth);
 
@@ -17,14 +18,25 @@ csv()
     });
 
     const breakdownData = {breakdowns, spendingLimit};
-    const breakdownJs = `var breakdown = ${JSON.stringify(breakdownData)}`;
 
-    fs.writeFileSync('./public/data/breakdown.js', breakdownJs);
+    const dataDir = `./public/data/${file}/`;
+    fs.mkdirSync(dataDir);
+
+    fs.writeFileSync(`${dataDir}breakdown.js`, JSON.stringify(breakdownData));
 
     const data = breakdowns.map(({month, breakdown}) => {
-      const { balanceBeforeWage } = breakdown;
-      return { month, balanceBeforeWage };
+      const { balanceBeforeWage, transportTotal } = breakdown;
+      return { month, balanceBeforeWage, transportTotal };
     }).reverse();
 
-    fs.writeFileSync('./public/data/data.json', JSON.stringify(data));
-  })
+    fs.writeFileSync(`${dataDir}data.json`, JSON.stringify(data));
+  });
+}
+
+fs.readdir(statementsFolder, (err, files) => {
+  files.forEach(file => {
+    ingestData(file);
+  });
+  const statementsJs = `var statements = ${JSON.stringify(files)}`;
+  fs.writeFileSync(`./public/data/statements.js`, statementsJs);
+});

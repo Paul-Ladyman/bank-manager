@@ -5,7 +5,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vega@5.17.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.17.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.12.2"></script>
-    <script type="text/javascript" src="data/breakdown.js"></script>
+    <script type="text/javascript" src="data/statements.js"></script>
     <link rel="stylesheet" href="index.css">
   </head>
   <body>
@@ -25,35 +25,27 @@
       >
         Graphs
       </div>
+      <div
+        class="header-item header-item__tab"
+      >
+        <select id="statement-selector" onchange="(statementSwitcher(this))">
+          <option value="undefined">--Select a statement--</option>
+        </select>
+      </div>
     </div>
+
+    <div id="loading"></div>
 
     <div class="report" id="report"></div>
 
     <div class="hidden" id="graphs">
-      <div id="vega"></div>
+      <div id="graphs-balance"></div>
+      <div id="graphs-transport"></div>
     </div>
 
+    <script type="text/javascript" src="app.js"></script>
     <script type="text/javascript" src="report.js"></script>
     <script type="text/javascript" src="graphs.js"></script>
-    <script type="text/javascript">
-      function tabSwitcher(selection) {
-        var toHide;
-        var toShow;
-        if (selection === 'report') {
-          toHide = 'graphs';
-          toShow = 'report';
-        }
 
-        if (selection === 'graphs') {
-          toHide = 'report';
-          toShow = 'graphs';
-        }
-
-        document.getElementById(toHide).classList.add('hidden');
-        document.getElementById(`${toHide}-tab`).classList.remove('active');
-        document.getElementById(toShow).classList.remove('hidden');
-        document.getElementById(`${toShow}-tab`).classList.add('active');
-      }
-    </script>
   </body>
 </html>
