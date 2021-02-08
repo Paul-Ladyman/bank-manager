@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run data && npm run serve",
-    "data": "rm -r public/data && mkdir public/data && node index.js",
+    "data": "rm -rf public/data && mkdir public/data && node index.js",
     "serve": "serve public"
   },
   "author": "",
