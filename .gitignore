@@ -3,3 +3,5 @@ statement.csv
 config.js
 *.swp
 npm-debug.log
+public/data/
+statements/*

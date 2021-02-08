@@ -1,0 +1,76 @@
+body {
+  margin: 0;
+}
+
+.header {
+  display: flex;
+  border-top: 2px solid #822000;
+  border-bottom: 2px solid #822000;
+  height: 50px;
+  width: 100%;
+  background-color: #ebe2d3;
+  margin-bottom: 20px;
+  box-shadow: 0 0 5px #979aa4;
+}
+
+.header-item {
+  padding: 0 5px;
+  margin: 0;
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+  border-right: 2px solid #822000;
+}
+
+.header-item__title {
+  font-size: 2em;
+}
+
+.header-item__tab {
+  padding-top: 6px;
+  cursor: pointer;
+}
+
+.header-item__tab:hover {
+  background-color:#fcf6eb;
+  text-decoration: underline;
+}
+
+.report {
+  padding: 10px;
+}
+
+.report-item {
+  margin-left: 10px;
+  margin-bottom: 5px;
+}
+
+.report-item__balance {
+  font-weight: bold;
+  color: #50a651;
+}
+
+.report-item__credit {
+  color: #50a651;
+}
+
+.report-item__debit {
+  color: #589fbf;
+}
+
+.report-item__warning {
+  color: #822000;
+}
+
+.report-item__indented {
+  margin-left: 40px;
+}
+
+.hidden {
+  display: none;
+}
+
+.active {
+  background-color:#fcf6eb;
+  text-decoration: underline;
+}

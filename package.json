@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run data && npm run serve",
+    "data": "rm -rf public/data && mkdir public/data && node index.js",
+    "serve": "serve public"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "chalk": "^2.4.1",
-    "csvtojson": "^1.1.12"
+    "csvtojson": "^1.1.12",
+    "serve": "^11.3.2"
   }
 }
