@@ -19,16 +19,18 @@ body {
   font-size: 1.5em;
   display: flex;
   align-items: center;
-  border-right: 2px solid #822000;
+  padding-top: 6px;
 }
 
 .header-item__title {
   font-size: 2em;
+  border-right: 2px solid #822000;
+  padding-top: 0;
 }
 
 .header-item__tab {
-  padding-top: 6px;
   cursor: pointer;
+  border-right: 2px solid #822000;
 }
 
 .header-item__tab:hover {
@@ -73,4 +75,8 @@ body {
 .active {
   background-color:#fcf6eb;
   text-decoration: underline;
+}
+
+.graph {
+  margin: 10px;
 }

@@ -66,4 +66,14 @@ function generateGraphs(statement) {
     '#graphs-transport',
     vegaConfig(statement, 'Transport Costs', 'transportTotal', 'Cost (£)')
   );
+
+  vegaEmbed(
+    '#graphs-bills',
+    vegaConfig(statement, 'Total bill payments', 'billsTotal', 'Payments (£)')
+  );
+
+  vegaEmbed(
+    '#graphs-utilities',
+    vegaConfig(statement, 'Total utility payments', 'utilitiesTotal', 'Payments (£)')
+  );
 }
