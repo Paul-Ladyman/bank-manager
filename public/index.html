@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Embedding Vega-Lite</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.17.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.17.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.12.2"></script>
+    <script type="text/javascript" src="data/breakdown.js"></script>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <div class="header">
+      <h1 class="header-item header-item__title">Bank Manager</h1>
+      <div class="header-item header-item__tab">Report</div>
+      <div class="header-item header-item__tab">Graphs</div>
+    </div>
+
+    <div class="report" id="report"></div>
+
+    <div id="graphs"></div>
+
+    <script type="text/javascript" src="report.js"></script>
+    <script type="text/javascript" src="graphs.js"></script>
+  </body>
+</html>
