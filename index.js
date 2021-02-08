@@ -24,7 +24,7 @@ csv()
     const data = breakdowns.map(({month, breakdown}) => {
       const { balanceBeforeWage } = breakdown;
       return { month, balanceBeforeWage };
-    });
+    }).reverse();
 
     fs.writeFileSync('./public/data/data.json', JSON.stringify(data));
   })
