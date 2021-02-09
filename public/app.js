@@ -31,7 +31,7 @@ function statementSwitcher(statementObject) {
   var statement = statementObject.value;
   if (statement !== 'undefined') {
     generateGraphs(statement);
-    httpGetAsync('data/' + statement + '/breakdown.js', function (breakdown) {
+    httpGetAsync('data/' + statement + '/breakdown.json', function (breakdown) {
       generateReport(breakdown);
     });
   }

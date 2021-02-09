@@ -22,28 +22,30 @@ function getCredits(statement, breakdown) {
 }
 
 function getBills(statement, breakdown) {
-  if (statementUtils.statementIsBill(statement)) {
-    return breakdown.bills.concat([statement]);
+  const statementIfBill = statementUtils.statementIfBill(statement)
+  if (statementIfBill) {
+    return breakdown.bills.concat([statementIfBill]);
   }
   return breakdown.bills;
 }
 
 function sumBills(statement, breakdown) {
-  if (statementUtils.statementIsBill(statement)) {
+  if (statementUtils.statementIfBill(statement)) {
     return breakdown.billsTotal + parseFloat(statement['Debit Amount']);
   }
   return breakdown.billsTotal;
 }
 
 function getUtilities(statement, breakdown) {
-  if (statementUtils.statementIsUtility(statement)) {
-    return breakdown.utilities.concat([statement]);
+  const statementIfUtility = statementUtils.statementIfUtility(statement)
+  if (statementIfUtility) {
+    return breakdown.utilities.concat([statementIfUtility]);
   }
   return breakdown.utilities;
 }
 
 function sumUtilities(statement, breakdown) {
-  if (statementUtils.statementIsUtility(statement)) {
+  if (statementUtils.statementIfUtility(statement)) {
     return breakdown.utilitiesTotal + parseFloat(statement['Debit Amount']);
   }
   return breakdown.utilitiesTotal;
@@ -83,8 +85,8 @@ function getFinalBalance(statement, breakdown) {
 
 function getSpendingWarnings(statement, breakdown) {
   const spendingWarning =
-    !statementUtils.statementIsUtility(statement) &&
-    !statementUtils.statementIsBill(statement) &&
+    !statementUtils.statementIfUtility(statement) &&
+    !statementUtils.statementIfBill(statement) &&
     !statementUtils.statementIsRent(statement) &&
     !statementUtils.statementIsInSpendingBlacklist(statement) &&
     statementUtils.debitAmountExceeds(statement, config.spendingLimit);

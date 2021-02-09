@@ -7,14 +7,16 @@ function getStatementsByMonth(statements, statementsByMonth) {
 
   const statement = statements[0];
   const month = getStatementMonth(statement);
+  const StatementDate = getStatementDate(statement);
+  const newStatement = { ...statement, StatementDate };
   const newStatements = statements.slice(1);
   const newMonth = {};
 
   if (!statementsByMonth[month]) {
-    newMonth[month] = [statement];
+    newMonth[month] = [newStatement];
   }
   else {
-    newMonth[month] = statementsByMonth[month].concat([statement]);
+    newMonth[month] = statementsByMonth[month].concat([newStatement]);
   }
 
   const newStatementsByMonth = Object.assign({}, statementsByMonth, newMonth);
@@ -48,12 +50,20 @@ function statementIsTransport(statement) {
   return statement['Transaction Description'] === config.transport;
 }
 
-function statementIsBill(statement) {
-  return config.bills.findIndex((bill) => (statement['Transaction Description'].includes(bill))) > -1;
+function statementIfBill(statement) {
+  const bill = config.bills.find((bill) => (statement['Transaction Description'].includes(bill)));
+  if (!bill) {
+    return undefined;
+  }
+  return {...statement, 'Transaction Description': bill};
 }
 
-function statementIsUtility(statement) {
-  return config.utilities.findIndex((utility) => (statement['Transaction Description'].includes(utility))) > -1;
+function statementIfUtility(statement) {
+  const utility = config.utilities.find((utility) => (statement['Transaction Description'].includes(utility)));
+  if (!utility) {
+    return undefined;
+  }
+  return {...statement, 'Transaction Description': utility};
 }
 
 function statementIsInSpendingBlacklist(statement) {
@@ -67,6 +77,11 @@ function getStatementMonth(statement) {
   return months[date.getMonth()];
 }
 
+function getStatementDate(statement) {
+  const dateParts = statement['Transaction Date'].split('/')
+  return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+}
+
 function debitAmountExceeds(statement, limit) {
   return parseFloat(statement['Debit Amount']) > parseFloat(limit);
 }
@@ -75,8 +90,8 @@ module.exports = {
   getStatementsByMonth: getStatementsByMonth,
   statementIsRent: statementIsRent,
   statementIsWage: statementIsWage,
-  statementIsBill: statementIsBill,
-  statementIsUtility: statementIsUtility,
+  statementIfBill,
+  statementIfUtility,
   statementIsInSpendingBlacklist: statementIsInSpendingBlacklist,
   debitAmountExceeds: debitAmountExceeds,
   statementIsTransport: statementIsTransport

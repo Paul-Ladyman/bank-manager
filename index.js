@@ -22,14 +22,28 @@ function ingestData(file) {
     const dataDir = `./public/data/${file}/`;
     fs.mkdirSync(dataDir);
 
-    fs.writeFileSync(`${dataDir}breakdown.js`, JSON.stringify(breakdownData));
+    fs.writeFileSync(`${dataDir}breakdown.json`, JSON.stringify(breakdownData, undefined, 2));
 
     const data = breakdowns.map(({month, breakdown}) => {
       const { balanceBeforeWage, transportTotal, billsTotal, utilitiesTotal } = breakdown;
       return { month, balanceBeforeWage, transportTotal, billsTotal, utilitiesTotal };
     }).reverse();
 
-    fs.writeFileSync(`${dataDir}data.json`, JSON.stringify(data));
+    fs.writeFileSync(`${dataDir}data.json`, JSON.stringify(data, undefined, 2));
+
+    const bills = breakdowns.flatMap(({breakdown}) => {
+      const { bills } = breakdown;
+      return bills.map((bill) => ({...bill}));
+    });
+
+    fs.writeFileSync(`${dataDir}bills.json`, JSON.stringify(bills, undefined, 2));
+
+    const utilities = breakdowns.flatMap(({breakdown}) => {
+      const { utilities } = breakdown;
+      return utilities.map((utility) => ({...utility}));
+    });
+
+    fs.writeFileSync(`${dataDir}utilities.json`, JSON.stringify(utilities, undefined, 2));
   });
 }
 

@@ -1,4 +1,4 @@
-function vegaConfig(statement, title, field, fieldTitle) {
+function singleValue(statement, title, field, fieldTitle) {
   return {
     $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
     title,
@@ -56,24 +56,69 @@ function vegaConfig(statement, title, field, fieldTitle) {
   };
 }
 
+function transactionSet(statement, title, set, fieldTitle) {
+  return {
+    $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
+    title,
+    data: {url: `data/${statement}/${set}.json`},
+    mark: {
+      type: 'line',
+      point: true
+    },
+    selection: {
+      description: {
+        type: 'multi', fields: ['Transaction Description'], bind: 'legend'
+      }
+    },
+    encoding: {
+      x: {
+        field: 'StatementDate',
+        type: 'temporal',
+        timeUnit: 'month',
+        axis: {
+          labelAngle: '-90',
+          title: 'Month'
+        }
+      },
+      y: {aggregate: 'sum', field: 'Debit Amount', type: 'quantitative', axis: { title: fieldTitle }},
+      color: {field: 'Transaction Description', type: 'nominal'},
+      opacity: {
+        condition: {selection: 'description', value: 1},
+        value: 0.2
+      },
+      tooltip: {field: 'Debit Amount', type: 'quantitative', aggregate: 'sum'},
+    }
+  }
+}
+
 function generateGraphs(statement) {
   vegaEmbed(
     '#graphs-balance',
-    vegaConfig(statement, 'Balance Before Wage', 'balanceBeforeWage', 'Balance (£)')
+    singleValue(statement, 'Balance Before Wage', 'balanceBeforeWage', 'Balance (£)')
   );
 
   vegaEmbed(
     '#graphs-transport',
-    vegaConfig(statement, 'Transport Costs', 'transportTotal', 'Cost (£)')
+    singleValue(statement, 'Transport Costs', 'transportTotal', 'Cost (£)')
   );
 
   vegaEmbed(
     '#graphs-bills',
-    vegaConfig(statement, 'Total bill payments', 'billsTotal', 'Payments (£)')
+    transactionSet(statement, 'Bills', 'bills', 'Payment (£)')
+  );
+
+  vegaEmbed(
+    '#graphs-bills-total',
+    singleValue(statement, 'Total bill payments', 'billsTotal', 'Payments (£)')
   );
 
   vegaEmbed(
     '#graphs-utilities',
-    vegaConfig(statement, 'Total utility payments', 'utilitiesTotal', 'Payments (£)')
+    transactionSet(statement, 'Utilities', 'utilities', 'Payment (£)')
+  );
+
+  vegaEmbed(
+    '#graphs-utilities-total',
+    singleValue(statement, 'Total utility payments', 'utilitiesTotal', 'Payments (£)')
   );
 }
