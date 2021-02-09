@@ -47,7 +47,7 @@ function statementIsWage(statement) {
 }
 
 function statementIsTransport(statement) {
-  return statement['Transaction Description'] === config.transport;
+  return config.transport.findIndex((bill) => (statement['Transaction Description'].includes(bill))) > -1;
 }
 
 function statementIfBill(statement) {
