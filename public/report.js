@@ -86,7 +86,7 @@ function generateReport(breakdownString) {
       });
     }
 
-    logDebit(`Largest Debit (excl. rent):`);
+    logDebit(`Largest Debit (excl. rent and savings):`);
     logDebit(`${breakdown.largestDebit['Transaction Description']} - £${breakdown.largestDebit['Debit Amount']}`, true);
 
     logBalance(`Final Balance: £${breakdown.finalBalance}`);

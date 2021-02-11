@@ -2,7 +2,11 @@ const statementUtils = require('./statementUtils');
 const config = require('./config');
 
 function getLargestDebit(statement, breakdown) {
-  if (statementUtils.statementIsRent(statement)) {
+  const ignoreStatement =
+    statementUtils.statementIsRent(statement) ||
+    statementUtils.statementIsSavings(statement)
+
+  if (ignoreStatement) {
     return breakdown.largestDebit;
   }
 
@@ -95,6 +99,7 @@ function getSpendingWarnings(statement, breakdown) {
     !statementUtils.statementIfUtility(statement) &&
     !statementUtils.statementIfBill(statement) &&
     !statementUtils.statementIsRent(statement) &&
+    !statementUtils.statementIsSavings(statement) &&
     !statementUtils.statementIsInSpendingBlacklist(statement) &&
     statementUtils.debitAmountExceeds(statement, config.spendingLimit);
 
