@@ -25,8 +25,8 @@ function ingestData(file) {
     fs.writeFileSync(`${dataDir}breakdown.json`, JSON.stringify(breakdownData, undefined, 2));
 
     const data = breakdowns.map(({month, breakdown}) => {
-      const { balanceBeforeWage, transportTotal, billsTotal, utilitiesTotal } = breakdown;
-      return { month, balanceBeforeWage, transportTotal, billsTotal, utilitiesTotal };
+      const { balanceBeforeWage, transportTotal, billsTotal, utilitiesTotal, savingsTotal } = breakdown;
+      return { month, balanceBeforeWage, transportTotal, billsTotal, utilitiesTotal, savingsTotal };
     }).reverse();
 
     fs.writeFileSync(`${dataDir}data.json`, JSON.stringify(data, undefined, 2));

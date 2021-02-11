@@ -50,6 +50,10 @@ function statementIsTransport(statement) {
   return config.transport.findIndex((bill) => (statement['Transaction Description'].includes(bill))) > -1;
 }
 
+function statementIsSavings(statement) {
+  return config.savings.findIndex((bill) => (statement['Transaction Description'].includes(bill))) > -1;
+}
+
 function statementIfBill(statement) {
   const bill = config.bills.find((bill) => (statement['Transaction Description'].includes(bill)));
   if (!bill) {
@@ -87,12 +91,13 @@ function debitAmountExceeds(statement, limit) {
 }
 
 module.exports = {
-  getStatementsByMonth: getStatementsByMonth,
-  statementIsRent: statementIsRent,
-  statementIsWage: statementIsWage,
+  getStatementsByMonth,
+  statementIsRent,
+  statementIsWage,
   statementIfBill,
   statementIfUtility,
-  statementIsInSpendingBlacklist: statementIsInSpendingBlacklist,
-  debitAmountExceeds: debitAmountExceeds,
-  statementIsTransport: statementIsTransport
+  statementIsInSpendingBlacklist,
+  debitAmountExceeds,
+  statementIsTransport,
+  statementIsSavings
 };

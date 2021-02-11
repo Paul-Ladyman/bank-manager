@@ -40,6 +40,10 @@ function generateReport(breakdownString) {
       logBalance(`Balance Before Wage: £${breakdown.balanceBeforeWage}`);
     }
 
+    if (breakdown.savingsTotal) {
+      logCredit(`Savings: £${breakdown.savingsTotal}`);
+    }
+
     if (breakdown.wage) {
       logCredit(`Wage: £${breakdown.wage}`);
     }

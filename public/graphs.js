@@ -98,6 +98,11 @@ function generateGraphs(statement) {
   );
 
   vegaEmbed(
+    '#graphs-savings',
+    singleValue(statement, 'Savings', 'savingsTotal', 'Saved (£)')
+  );
+
+  vegaEmbed(
     '#graphs-transport',
     singleValue(statement, 'Transport Costs', 'transportTotal', 'Cost (£)')
   );
