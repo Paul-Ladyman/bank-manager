@@ -9,8 +9,11 @@ body {
   height: 50px;
   width: 100%;
   background-color: #ebe2d3;
-  margin-bottom: 20px;
   box-shadow: 0 0 5px #979aa4;
+}
+
+.header__sub {
+  border-top: none;
 }
 
 .header-item {
@@ -39,7 +42,13 @@ body {
 }
 
 .report {
-  padding: 10px;
+  padding: 0 10px;
+  margin-top: 20px;
+}
+
+.graphs {
+  padding: 0 10px;
+  margin-top: 20px;
 }
 
 .report-item {

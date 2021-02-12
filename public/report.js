@@ -1,40 +1,36 @@
-function generateReport(breakdownString) {
-  var breakdown = JSON.parse(breakdownString);
-  var breakdowns = breakdown.breakdowns;
-  var spendingLimit = breakdown.spendingLimit;
-  var report = '';
-  var reportElement = document.getElementById('report');
-
-  function addToReport(addition) {
-    report += addition;
-  }
-
-  function indentClass(indent) {
-    return indent ? 'report-item__indented' : '';
-  }
-
-  function logMonth(month) {
-    addToReport(`<h2>${month}</h2>`);
-  }
-
-  function logCredit(credit, indent) {
-    addToReport(`<div class="report-item report-item__credit ${indentClass(indent)}">${credit}</div>`);
-  }
-
-  function logDebit(debit, indent) {
-    addToReport(`<div class="report-item report-item__debit ${indentClass(indent)}">${debit}</div>`);
-  }
-
-  function logBalance(balance) {
-    addToReport(`<div class="report-item report-item__balance">${balance}</div>`);
-  }
-
-  function logWarning(warning, indent) {
-    addToReport(`<div class="report-item report-item__warning ${indentClass(indent)}">${warning}</div>`);
-  }
+function getReport(breakdowns, spendingLimit) {
+  var report = {};
 
   function reportByMonth(month, breakdown, spendingLimit) {
-    logMonth(`${month}`);
+    function addToReport(addition) {
+      if (report[month]) {
+        report[month] += addition;
+      } else {
+        report[month] = addition;
+      }
+    }
+  
+    function indentClass(indent) {
+      return indent ? 'report-item__indented' : '';
+    }
+  
+    function logCredit(credit, indent) {
+      addToReport(`<div class="report-item report-item__credit ${indentClass(indent)}">${credit}</div>`);
+    }
+  
+    function logDebit(debit, indent) {
+      addToReport(`<div class="report-item report-item__debit ${indentClass(indent)}">${debit}</div>`);
+    }
+  
+    function logBalance(balance) {
+      addToReport(`<div class="report-item report-item__balance">${balance}</div>`);
+    }
+  
+    function logWarning(warning, indent) {
+      addToReport(`<div class="report-item report-item__warning ${indentClass(indent)}">${warning}</div>`);
+    }
+
+    addToReport(`<h2>${month}</h2>`);
 
     if (breakdown.balanceBeforeWage) {
       logBalance(`Balance Before Wage: £${breakdown.balanceBeforeWage}`);
@@ -92,7 +88,39 @@ function generateReport(breakdownString) {
     logBalance(`Final Balance: £${breakdown.finalBalance}`);
   }
 
-  reportElement.innerHTML = '';
   breakdowns.forEach(({month, breakdown}) => reportByMonth(month, breakdown, spendingLimit));
-  reportElement.innerHTML = report;
+  return report;
+}
+
+function generateReport(breakdownString) {
+  const breakdown = JSON.parse(breakdownString);
+  const breakdowns = breakdown.breakdowns;
+  const spendingLimit = breakdown.spendingLimit;
+  const headerElement = document.getElementById('report-header');
+  const reportElement = document.getElementById('report-body');
+
+  headerElement.innerHTML = '';
+
+  const report = getReport(breakdowns, spendingLimit);
+
+  const reportTabs = breakdowns.reverse().map(({month}) => {
+    const tab = document.createElement('div');
+    tab.classList = 'header-item header-item__tab';
+    tab.innerText = month.slice(0, 3);
+    return { month, tab };
+  });
+
+  const reportTabSwitcher = (month, selectedTab, allTabs) => {
+    allTabs.forEach(({tab}) => tab.classList.remove('active'))
+    selectedTab.classList.add('active');
+    reportElement.innerHTML = report[month];
+  };
+
+  reportTabs.forEach(({month, tab}, i) => {
+    tab.onclick = () => reportTabSwitcher(month, tab, reportTabs);
+    headerElement.appendChild(tab);
+    if (i === 0) {
+      tab.click();
+    }
+  });
 }
