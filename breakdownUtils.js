@@ -109,6 +109,29 @@ function getSpendingWarnings(statement, breakdown) {
   return breakdown.spendingWarnings;
 }
 
+function getDebits(statement, breakdown) {
+  const rawAmount = statement['Debit Amount'];
+  
+  if (!rawAmount) {
+    return breakdown.debits;
+  }
+
+  const description = statement['Transaction Description'];
+  const existingDebitor = breakdown.debits[description];
+  const amount = parseFloat(rawAmount);
+
+  if (existingDebitor) {
+    const { debits, totalDebitAmount } = existingDebitor;
+    const newDebitAmount = totalDebitAmount + amount;
+    const newDebits = debits + 1;
+    breakdown.debits[description] = { debits: newDebits, totalDebitAmount: newDebitAmount };
+  } else {
+    breakdown.debits[description] = { debits: 1, totalDebitAmount: amount };
+  }
+
+  return breakdown.debits;
+}
+
 function getMonthBreakdown(statements, breakdown) {
   if (!breakdown) {
     breakdown = {
@@ -119,7 +142,8 @@ function getMonthBreakdown(statements, breakdown) {
       utilities: [],
       transportTotal: 0.00,
       savingsTotal: 0.00,
-      spendingWarnings: []
+      spendingWarnings: [],
+      debits: {}
     };
   }
 
@@ -142,7 +166,8 @@ function getMonthBreakdown(statements, breakdown) {
     utilitiesTotal: sumUtilities(statement, breakdown),
     transportTotal: sumTransport(statement, breakdown),
     savingsTotal: sumSavings(statement, breakdown),
-    spendingWarnings: getSpendingWarnings(statement, breakdown)
+    spendingWarnings: getSpendingWarnings(statement, breakdown),
+    debits: getDebits(statement, breakdown)
   });
   return getMonthBreakdown(newStatements, newBreakdown);
 }

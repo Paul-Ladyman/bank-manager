@@ -99,6 +99,23 @@ function getReport(breakdowns, spendingLimit) {
       );
     }
 
+    const debitors = Object.keys(breakdown.debits);
+    if (debitors.length > 0) {
+      const sortedDebitors = debitors.sort((debitorA, debitorB) => {
+        const debitorAAmount = breakdown.debits[debitorA].debits;
+        const debitorBAmount = breakdown.debits[debitorB].debits;
+        return debitorBAmount - debitorAAmount;
+      });
+      reportContainer(
+        'All debits',
+        'report-items__debit',
+        sortedDebitors.map((debitor) => ({
+          description: `${debitor} (x${breakdown.debits[debitor].debits})`,
+          value: breakdown.debits[debitor].totalDebitAmount.toFixed(2)
+        }))
+      );
+    }
+
     addToReport('</div><div class="report-body--right">');
 
     if (breakdown.spendingWarnings.length > 0) {
