@@ -39,7 +39,7 @@ const months = [
 ];
 
 function statementIsRent(statement) {
-  return statement['Transaction Description'] === config.rent;
+  return config.rent.findIndex((rent) => (statement['Transaction Description'].includes(rent))) > -1;
 }
 
 function statementIsWage(statement) {

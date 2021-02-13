@@ -132,6 +132,28 @@ function getDebits(statement, breakdown) {
   return breakdown.debits;
 }
 
+function getTotalIn(statement, breakdown) {
+  const statementIsSavings = statementUtils.statementIsSavings(statement);
+  const rawAmount = statement['Credit Amount'];
+  
+  if (statementIsSavings || !rawAmount) {
+    return breakdown.totalIn;
+  }
+
+  return breakdown.totalIn + parseFloat(rawAmount);
+}
+
+function getTotalOut(statement, breakdown) {
+  const statementIsSavings = statementUtils.statementIsSavings(statement);
+  const rawAmount = statement['Debit Amount'];
+  
+  if (statementIsSavings || !rawAmount) {
+    return breakdown.totalOut;
+  }
+
+  return breakdown.totalOut + parseFloat(rawAmount);
+}
+
 function getMonthBreakdown(statements, breakdown) {
   if (!breakdown) {
     breakdown = {
@@ -143,7 +165,9 @@ function getMonthBreakdown(statements, breakdown) {
       transportTotal: 0.00,
       savingsTotal: 0.00,
       spendingWarnings: [],
-      debits: {}
+      debits: {},
+      totalIn: 0.00,
+      totalOut: 0.00
     };
   }
 
@@ -167,7 +191,9 @@ function getMonthBreakdown(statements, breakdown) {
     transportTotal: sumTransport(statement, breakdown),
     savingsTotal: sumSavings(statement, breakdown),
     spendingWarnings: getSpendingWarnings(statement, breakdown),
-    debits: getDebits(statement, breakdown)
+    debits: getDebits(statement, breakdown),
+    totalIn: getTotalIn(statement, breakdown),
+    totalOut: getTotalOut(statement, breakdown),
   });
   return getMonthBreakdown(newStatements, newBreakdown);
 }

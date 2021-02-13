@@ -51,6 +51,8 @@ function getReport(breakdowns, spendingLimit) {
     addToReport('<div class="report-body--columns"><div class="report-body--left">');
 
     reportHighlights([
+      { description: 'Total In (excl. savings)', value: breakdown.totalIn.toFixed(2) },
+      { description: 'Total Out (excl. savings)', value: breakdown.totalOut.toFixed(2) },
       { description: 'Balance Before Wage', value: breakdown.balanceBeforeWage },
       { description: 'Savings', value: breakdown.savingsTotal },
       { description: 'Wage', value: breakdown.wage },
@@ -119,7 +121,7 @@ function getReport(breakdowns, spendingLimit) {
     addToReport('</div><div class="report-body--right">');
 
     if (breakdown.spendingWarnings.length > 0) {
-      const warningsTitle = `Spending Warnings (> £${parseFloat(spendingLimit)})`;
+      const warningsTitle = `Spending Warnings (> £${parseFloat(spendingLimit)}, excl. rent, bills, etc.)`;
       reportItems(warningsTitle, breakdown.spendingWarnings.map((warning) => ({
         description: warning['Transaction Description'],
         value: warning['Debit Amount']

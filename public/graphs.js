@@ -93,6 +93,16 @@ function transactionSet(statement, title, set, fieldTitle) {
 
 function generateGraphs(statement) {
   vegaEmbed(
+    '#graphs-totalin',
+    singleValue(statement, 'Total In', 'totalIn', 'Amount (£)')
+  );
+
+  vegaEmbed(
+    '#graphs-totalout',
+    singleValue(statement, 'Total Out', 'totalOut', 'Amount (£)')
+  );
+
+  vegaEmbed(
     '#graphs-balance',
     singleValue(statement, 'Balance Before Wage', 'balanceBeforeWage', 'Balance (£)')
   );
