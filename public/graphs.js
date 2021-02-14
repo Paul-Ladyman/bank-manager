@@ -1,6 +1,8 @@
 function singleValue(statement, title, field, fieldTitle) {
   return {
     $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
+    width: 300,
+    height: 300,
     title,
     description: 'Historical view of account balance before wage.',
     data: {url: `data/${statement}/data.json`},
@@ -8,7 +10,7 @@ function singleValue(statement, title, field, fieldTitle) {
       {
         mark: 'bar',
         encoding: {
-          x: {field: 'month', type: 'ordinal', sort: 'month', axis: { title: 'Month' }},
+          x: {field: 'month', type: 'ordinal', sort: 'month', axis: { title: 'Month', labelExpr: 'slice(datum.label, 0, 3)' }},
           y: {field, type: 'quantitative', axis: { title: fieldTitle }},
           tooltip: {field, type: 'quantitative'},
         }
@@ -59,6 +61,8 @@ function singleValue(statement, title, field, fieldTitle) {
 function transactionSet(statement, title, set, fieldTitle) {
   return {
     $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
+    width: 300,
+    height: 300,
     title,
     data: {url: `data/${statement}/${set}.json`},
     mark: {
@@ -91,19 +95,57 @@ function transactionSet(statement, title, set, fieldTitle) {
   }
 }
 
+function balance(statement, title, aggregate) {
+  return {
+    $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
+    width: 300,
+    height: 300,
+    title,
+    data: {url: `data/${statement}/statements.json`},
+    mark: {type: 'area', line: true, point: true},
+    encoding: {
+      x: {
+        field: 'StatementDate',
+        type: 'temporal',
+        timeUnit: 'week',
+        axis: {
+          labelAngle: '-90',
+          title: 'Week of Year'
+        }
+      },
+      y: {aggregate, field: 'Balance', type: 'quantitative', axis: { title: 'Balance (£)' }},
+      tooltip: [
+        {aggregate, field: 'Balance', type: 'quantitative', title: 'Balance (£)'},
+        {field: 'StatementDate', type: 'temporal', timeUnit: 'month', title: 'Month'},
+        {field: 'StatementDate', type: 'temporal', timeUnit: 'week', title: 'Week'},
+      ]
+    }
+  }
+}
+
 function generateGraphs(statement) {
   vegaEmbed(
+    '#graphs-balance-max',
+    balance(statement, 'Balance (Maximum weekly value)', 'max')
+  );
+
+  vegaEmbed(
+    '#graphs-balance-min',
+    balance(statement, 'Balance (Minimum weekly value)', 'min')
+  );
+
+  vegaEmbed(
     '#graphs-totalin',
-    singleValue(statement, 'Total In', 'totalIn', 'Amount (£)')
+    singleValue(statement, 'Total In (excl. savings)', 'totalIn', 'Amount (£)')
   );
 
   vegaEmbed(
     '#graphs-totalout',
-    singleValue(statement, 'Total Out', 'totalOut', 'Amount (£)')
+    singleValue(statement, 'Total Out (excl. savings)', 'totalOut', 'Amount (£)')
   );
 
   vegaEmbed(
-    '#graphs-balance',
+    '#graphs-balance-before-wage',
     singleValue(statement, 'Balance Before Wage', 'balanceBeforeWage', 'Balance (£)')
   );
 

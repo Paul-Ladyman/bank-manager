@@ -24,6 +24,9 @@ function ingestData(file) {
 
     fs.writeFileSync(`${dataDir}breakdown.json`, JSON.stringify(breakdownData, undefined, 2));
 
+    const allStatements = months.flatMap((month) => statementsByMonth[month]);
+    fs.writeFileSync(`${dataDir}statements.json`, JSON.stringify(allStatements, undefined, 2));
+
     const data = breakdowns.map(({month, breakdown}) => {
       const { balanceBeforeWage, transportTotal, billsTotal, utilitiesTotal, savingsTotal, totalIn, totalOut } = breakdown;
       return { month, balanceBeforeWage, transportTotal, billsTotal, utilitiesTotal, savingsTotal, totalIn, totalOut };
