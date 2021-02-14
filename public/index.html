@@ -13,6 +13,13 @@
       <h1 class="header-item header-item__title">Bank Manager</h1>
       <div
         class="header-item header-item__tab active"
+        id="statements-tab"
+        onclick="tabSwitcher('statements')"
+      >
+        Statements
+    </div>
+      <div
+        class="header-item header-item__tab"
         id="report-tab"
         onclick="tabSwitcher('report')"
       >
@@ -32,7 +39,12 @@
       </div>
     </div>
 
-    <div id="report">
+    <div id="statements">
+      <div id="statements-header" class="header header__sub"></div>
+      <div class="statements" id="statements-body"></div>
+    </div>
+
+    <div class="hidden" id="report">
       <div id="report-header" class="header header__sub"></div>
       <div class="report" id="report-body"></div>
     </div>
@@ -50,6 +62,7 @@
     </div>
 
     <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="statements.js"></script>
     <script type="text/javascript" src="report.js"></script>
     <script type="text/javascript" src="graphs.js"></script>
 

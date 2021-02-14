@@ -1,20 +1,15 @@
 function tabSwitcher(selection) {
-  var toHide;
-  var toShow;
-  if (selection === 'report') {
-    toHide = 'graphs';
-    toShow = 'report';
-  }
+  const tabs = ['statements', 'report', 'graphs'];
 
-  if (selection === 'graphs') {
-    toHide = 'report';
-    toShow = 'graphs';
-  }
-
-  document.getElementById(toHide).classList.add('hidden');
-  document.getElementById(`${toHide}-tab`).classList.remove('active');
-  document.getElementById(toShow).classList.remove('hidden');
-  document.getElementById(`${toShow}-tab`).classList.add('active');
+  tabs.forEach((tab) => {
+    if(tab === selection) {
+      document.getElementById(tab).classList.remove('hidden');
+      document.getElementById(`${tab}-tab`).classList.add('active');
+    } else {
+      document.getElementById(tab).classList.add('hidden');
+      document.getElementById(`${tab}-tab`).classList.remove('active');
+    }
+  });
 }
 
 function httpGetAsync(theUrl, callback){
@@ -33,6 +28,7 @@ function statementSwitcher(statementObject) {
     generateGraphs(statement);
     httpGetAsync('data/' + statement + '/breakdown.json', function (breakdown) {
       generateReport(breakdown);
+      generateStatements(breakdown);
     });
   }
 }

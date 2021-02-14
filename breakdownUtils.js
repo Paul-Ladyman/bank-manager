@@ -154,6 +154,10 @@ function getTotalOut(statement, breakdown) {
   return breakdown.totalOut + parseFloat(rawAmount);
 }
 
+function getStatements(statement, breakdown) {
+  return breakdown.statements.concat([statement]);
+}
+
 function getMonthBreakdown(statements, breakdown) {
   if (!breakdown) {
     breakdown = {
@@ -167,7 +171,8 @@ function getMonthBreakdown(statements, breakdown) {
       spendingWarnings: [],
       debits: {},
       totalIn: 0.00,
-      totalOut: 0.00
+      totalOut: 0.00,
+      statements: []
     };
   }
 
@@ -194,6 +199,7 @@ function getMonthBreakdown(statements, breakdown) {
     debits: getDebits(statement, breakdown),
     totalIn: getTotalIn(statement, breakdown),
     totalOut: getTotalOut(statement, breakdown),
+    statements: getStatements(statement, breakdown)
   });
   return getMonthBreakdown(newStatements, newBreakdown);
 }
