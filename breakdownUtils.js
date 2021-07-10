@@ -63,7 +63,9 @@ function sumTransport(statement, breakdown) {
 }
 
 function sumSavings(statement, breakdown) {
-  if (statementUtils.statementIsSavings(statement)) {
+  const statementIsSavings = statementUtils.statementIsSavings(statement);
+  const rawAmount = statement['Debit Amount'];
+  if (statementIsSavings && rawAmount) {
     return breakdown.savingsTotal + parseFloat(statement['Debit Amount']);
   }
   return breakdown.savingsTotal;
