@@ -145,6 +145,11 @@ function generateGraphs(statement) {
   );
 
   vegaEmbed(
+    '#graphs-totalspending',
+    singleValue(statement, 'Total Spending (excl. savings + rent)', 'totalSpending', 'Amount (£)')
+  );
+
+  vegaEmbed(
     '#graphs-balance-before-wage',
     singleValue(statement, 'Balance Before Wage', 'balanceBeforeWage', 'Balance (£)')
   );

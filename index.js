@@ -28,8 +28,8 @@ function ingestData(file) {
     fs.writeFileSync(`${dataDir}statements.json`, JSON.stringify(allStatements, undefined, 2));
 
     const data = breakdowns.map(({month, breakdown}) => {
-      const { balanceBeforeWage, transportTotal, billsTotal, utilitiesTotal, savingsTotal, totalIn, totalOut } = breakdown;
-      return { month, balanceBeforeWage, transportTotal, billsTotal, utilitiesTotal, savingsTotal, totalIn, totalOut };
+      const { balanceBeforeWage, transportTotal, billsTotal, utilitiesTotal, savingsTotal, totalIn, totalOut, totalSpending } = breakdown;
+      return { month, balanceBeforeWage, transportTotal, billsTotal, utilitiesTotal, savingsTotal, totalIn, totalOut, totalSpending };
     }).reverse();
 
     fs.writeFileSync(`${dataDir}data.json`, JSON.stringify(data, undefined, 2));

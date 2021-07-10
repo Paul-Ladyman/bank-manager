@@ -154,6 +154,18 @@ function getTotalOut(statement, breakdown) {
   return breakdown.totalOut + parseFloat(rawAmount);
 }
 
+function getTotalSpending(statement, breakdown) {
+  const statementIsSavings = statementUtils.statementIsSavings(statement);
+  const statementIsRent = statementUtils.statementIsRent(statement);
+  const rawAmount = statement['Debit Amount'];
+  
+  if (statementIsSavings || statementIsRent || !rawAmount) {
+    return breakdown.totalSpending;
+  }
+
+  return breakdown.totalSpending + parseFloat(rawAmount);
+}
+
 function getStatements(statement, breakdown) {
   return breakdown.statements.concat([statement]);
 }
@@ -172,6 +184,7 @@ function getMonthBreakdown(statements, breakdown) {
       debits: {},
       totalIn: 0.00,
       totalOut: 0.00,
+      totalSpending: 0.00,
       statements: []
     };
   }
@@ -199,6 +212,7 @@ function getMonthBreakdown(statements, breakdown) {
     debits: getDebits(statement, breakdown),
     totalIn: getTotalIn(statement, breakdown),
     totalOut: getTotalOut(statement, breakdown),
+    totalSpending: getTotalSpending(statement, breakdown),
     statements: getStatements(statement, breakdown)
   });
   return getMonthBreakdown(newStatements, newBreakdown);

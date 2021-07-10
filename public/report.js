@@ -53,6 +53,7 @@ function getReport(breakdowns, spendingLimit) {
     reportHighlights([
       { description: 'Total In (excl. savings)', value: breakdown.totalIn.toFixed(2) },
       { description: 'Total Out (excl. savings)', value: breakdown.totalOut.toFixed(2) },
+      { description: 'Total Spending (excl. savings + rent)', value: breakdown.totalSpending.toFixed(2) },
       { description: 'Balance Before Wage', value: breakdown.balanceBeforeWage },
       { description: 'Savings', value: breakdown.savingsTotal },
       { description: 'Wage', value: breakdown.wage },
