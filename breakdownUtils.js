@@ -41,16 +41,20 @@ function sumBills(statement, breakdown) {
 }
 
 function getUtilities(statement, breakdown) {
-  const statementIfUtility = statementUtils.statementIfUtility(statement)
-  if (statementIfUtility) {
+  const statementIfUtility = statementUtils.statementIfUtility(statement);
+  const rawAmount = statement['Debit Amount'];
+  if (statementIfUtility && rawAmount) {
     return breakdown.utilities.concat([statementIfUtility]);
   }
   return breakdown.utilities;
 }
 
 function sumUtilities(statement, breakdown) {
-  if (statementUtils.statementIfUtility(statement)) {
-    return breakdown.utilitiesTotal + parseFloat(statement['Debit Amount']);
+  const statementIsUtility = statementUtils.statementIfUtility(statement);
+  const rawAmount = statement['Debit Amount'];
+  if (statementIsUtility && rawAmount) {
+    console.log(statement);
+    return breakdown.utilitiesTotal + parseFloat(rawAmount);
   }
   return breakdown.utilitiesTotal;
 }
