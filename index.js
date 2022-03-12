@@ -1,13 +1,13 @@
-const csv = require("csvtojson");
+const csv = require('csvtojson');
 const fs = require('fs');
 const statementUtils = require('./statementUtils');
 const breakdownUtils = require('./breakdownUtils');
 const { spendingLimit } = require('./config');
 const statementsFolder = './statements/';
 
-function ingestData(file) {
+function ingestData(file, rawStatements) {
   csv()
-  .fromFile(`${statementsFolder}${file}`)
+  .fromString(rawStatements)
   .on("end_parsed", function(statements) {
     const statementsByMonth = statementUtils.getStatementsByMonth(statements, {});
     const months = Object.keys(statementsByMonth);
@@ -50,9 +50,44 @@ function ingestData(file) {
   });
 }
 
+function isCaisseDepargne(file) {
+  return file.includes('caissedepargne');
+}
+
+function mapCaisseDepargne(rawStatements) {
+  console.log('>>> mapping caisse depargne');
+  const lines = rawStatements.split('\n');
+  const finalBalanceLine = lines[3];
+  const finalBalance = finalBalanceLine.replace(/.*?(\d*),(\d*)/, '$1.$2');
+  const startBalanceLine = lines[lines.length - 1];
+  const startBalance = startBalanceLine.replace(/.*?(\d*),(\d*)/, '$1.$2');
+  const originalStatements = lines.slice(5, lines.length - 1);
+  console.log('>>> final', finalBalanceLine);
+  console.log('>>> finalBalance', finalBalance);
+  console.log('>>> start', startBalanceLine);
+  console.log('>>> startBalance', startBalance);
+
+  const mappedStatements = originalStatements.map((statement) => {
+    const [
+      _,
+      date,
+      __,
+      label,
+      debit,
+      credit
+    ] = statement.match(/(.*?);(.*?);(.*?);(.*?);(.*?);(.*?);/);
+    console.log(date, label, debit, credit);
+    return `${date},${label}${debit}${credit}`;
+  });
+  const header = 'Transaction Date,Transaction Description,Debit Amount,Credit Amount,Balance\n';
+  return `${header}${mappedStatements.join('\n')}`;
+}
+
 fs.readdir(statementsFolder, (err, files) => {
   files.forEach(file => {
-    ingestData(file);
+    const rawStatements = fs.readFileSync(`${statementsFolder}${file}`).toString();
+    const statementsToProcess = isCaisseDepargne(file) ? mapCaisseDepargne(rawStatements) : rawStatements;
+    ingestData(file, statementsToProcess);
   });
   const statementsJs = `var statements = ${JSON.stringify(files)}`;
   fs.writeFileSync(`./public/data/statements.js`, statementsJs);
