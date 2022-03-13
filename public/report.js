@@ -16,7 +16,7 @@ function getReport(breakdowns, spendingLimit) {
         const descriptionToRender = total
           ? `<b>${description}</b>`
           : description;
-        const valueWithDefault = `£${value || ''}`;
+        const valueWithDefault = `${value || ''}`;
         const valueToRender = total
           ? `<b>${valueWithDefault}</b>`
           : valueWithDefault;
@@ -37,7 +37,7 @@ function getReport(breakdowns, spendingLimit) {
     }
 
     function logHighlight(title, value, itemsModifier) {
-      addToReport(`<div class="highlight  ${itemsModifier}"><div class="highlight--title">${title}:</div><div>£${value || ''}</div></div>`);
+      addToReport(`<div class="highlight  ${itemsModifier}"><div class="highlight--title">${title}:</div><div>${value || ''}</div></div>`);
     }
 
     function reportHighlights(highlights, itemsModifier) {
@@ -122,7 +122,7 @@ function getReport(breakdowns, spendingLimit) {
     addToReport('</div><div class="report-body--right">');
 
     if (breakdown.spendingWarnings.length > 0) {
-      const warningsTitle = `Spending Warnings (> £${parseFloat(spendingLimit)}, excl. rent, bills, etc.)`;
+      const warningsTitle = `Spending Warnings (> ${parseFloat(spendingLimit)}, excl. rent, bills, etc.)`;
       reportItems(warningsTitle, breakdown.spendingWarnings.map((warning) => ({
         description: warning['Transaction Description'],
         value: warning['Debit Amount']

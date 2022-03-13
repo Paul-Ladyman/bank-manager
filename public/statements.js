@@ -69,12 +69,12 @@ function getStatements(breakdowns, spendingLimit) {
       const typeKey = statement['Transaction Type'];
       const type = transactionTypes[typeKey];
       const credit = statement['Credit Amount'];
-      const creditToRender = credit ? `£${credit}` : '';
+      const creditToRender = credit ? `${credit}` : '';
       const debit = statement['Debit Amount'];
-      const debitToRender = debit ? `£${debit}` : '';
+      const debitToRender = debit ? `${debit}` : '';
       const balance = statement['Balance'];
       addToStatements('<tr>' +
-        `<td>${date}</td><td>${description}</td><td>${type} (${typeKey})</td><td>${creditToRender}</td><td>${debitToRender}</td><td>£${balance}</td>` +
+        `<td>${date}</td><td>${description}</td><td>${type} (${typeKey})</td><td>${creditToRender}</td><td>${debitToRender}</td><td>${balance}</td>` +
         '</tr>'
       );
     });
