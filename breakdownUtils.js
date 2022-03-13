@@ -53,7 +53,6 @@ function sumUtilities(statement, breakdown) {
   const statementIsUtility = statementUtils.statementIfUtility(statement);
   const rawAmount = statement['Debit Amount'];
   if (statementIsUtility && rawAmount) {
-    console.log(statement);
     return breakdown.utilitiesTotal + parseFloat(rawAmount);
   }
   return breakdown.utilitiesTotal;

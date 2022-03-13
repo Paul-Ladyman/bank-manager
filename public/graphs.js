@@ -113,9 +113,9 @@ function balance(statement, title, aggregate) {
           title: 'Week of Year'
         }
       },
-      y: {aggregate, field: 'Balance', type: 'quantitative', axis: { title: 'Balance (£)' }},
+      y: {aggregate, field: 'Balance', type: 'quantitative', axis: { title: 'Balance' }},
       tooltip: [
-        {aggregate, field: 'Balance', type: 'quantitative', title: 'Balance (£)'},
+        {aggregate, field: 'Balance', type: 'quantitative', title: 'Balance'},
         {field: 'StatementDate', type: 'temporal', timeUnit: 'month', title: 'Month'},
         {field: 'StatementDate', type: 'temporal', timeUnit: 'week', title: 'Week'},
       ]
@@ -136,51 +136,51 @@ function generateGraphs(statement) {
 
   vegaEmbed(
     '#graphs-totalin',
-    singleValue(statement, 'Total In (excl. savings)', 'totalIn', 'Amount (£)')
+    singleValue(statement, 'Total In (excl. savings)', 'totalIn', 'Amount')
   );
 
   vegaEmbed(
     '#graphs-totalout',
-    singleValue(statement, 'Total Out (excl. savings)', 'totalOut', 'Amount (£)')
+    singleValue(statement, 'Total Out (excl. savings)', 'totalOut', 'Amount')
   );
 
   vegaEmbed(
     '#graphs-totalspending',
-    singleValue(statement, 'Total Spending (excl. savings + rent)', 'totalSpending', 'Amount (£)')
+    singleValue(statement, 'Total Spending (excl. savings + rent)', 'totalSpending', 'Amount')
   );
 
   vegaEmbed(
     '#graphs-balance-before-wage',
-    singleValue(statement, 'Balance Before Wage', 'balanceBeforeWage', 'Balance (£)')
+    singleValue(statement, 'Balance Before Wage', 'balanceBeforeWage', 'Balance')
   );
 
   vegaEmbed(
     '#graphs-savings',
-    singleValue(statement, 'Savings', 'savingsTotal', 'Saved (£)')
+    singleValue(statement, 'Savings', 'savingsTotal', 'Saved')
   );
 
   vegaEmbed(
     '#graphs-transport',
-    singleValue(statement, 'Transport Costs', 'transportTotal', 'Cost (£)')
+    singleValue(statement, 'Transport Costs', 'transportTotal', 'Cost')
   );
 
   vegaEmbed(
     '#graphs-bills',
-    transactionSet(statement, 'Bills', 'bills', 'Payment (£)')
+    transactionSet(statement, 'Bills', 'bills', 'Payment')
   );
 
   vegaEmbed(
     '#graphs-bills-total',
-    singleValue(statement, 'Total bill payments', 'billsTotal', 'Payments (£)')
+    singleValue(statement, 'Total bill payments', 'billsTotal', 'Payments')
   );
 
   vegaEmbed(
     '#graphs-utilities',
-    transactionSet(statement, 'Utilities', 'utilities', 'Payment (£)')
+    transactionSet(statement, 'Utilities', 'utilities', 'Payment')
   );
 
   vegaEmbed(
     '#graphs-utilities-total',
-    singleValue(statement, 'Total utility payments', 'utilitiesTotal', 'Payments (£)')
+    singleValue(statement, 'Total utility payments', 'utilitiesTotal', 'Payments')
   );
 }

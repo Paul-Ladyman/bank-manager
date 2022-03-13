@@ -43,7 +43,7 @@ function statementIsRent(statement) {
 }
 
 function statementIsWage(statement) {
-  return statement['Transaction Description'] === config.wage;
+  return config.wage.findIndex((wage) => (statement['Transaction Description'].includes(wage))) > -1;
 }
 
 function statementIsTransport(statement) {

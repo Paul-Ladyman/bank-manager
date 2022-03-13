@@ -1,13 +1,14 @@
-const csv = require("csvtojson");
+const csv = require('csvtojson');
 const fs = require('fs');
 const statementUtils = require('./statementUtils');
+const mapStatements = require('./statementMapper');
 const breakdownUtils = require('./breakdownUtils');
 const { spendingLimit } = require('./config');
 const statementsFolder = './statements/';
 
-function ingestData(file) {
+function ingestData(file, rawStatements) {
   csv()
-  .fromFile(`${statementsFolder}${file}`)
+  .fromString(rawStatements)
   .on("end_parsed", function(statements) {
     const statementsByMonth = statementUtils.getStatementsByMonth(statements, {});
     const months = Object.keys(statementsByMonth);
@@ -52,7 +53,8 @@ function ingestData(file) {
 
 fs.readdir(statementsFolder, (err, files) => {
   files.forEach(file => {
-    ingestData(file);
+    const rawStatements = fs.readFileSync(`${statementsFolder}${file}`).toString();
+    ingestData(file, mapStatements(file, rawStatements));
   });
   const statementsJs = `var statements = ${JSON.stringify(files)}`;
   fs.writeFileSync(`./public/data/statements.js`, statementsJs);
