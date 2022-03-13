@@ -41,6 +41,7 @@ const transactionTypes = {
   TFR: 'Transfer',
   UT: 'Unit Trust',
   SUR: 'Excess Reject',
+  UN: 'UNKNOWN'
 };
 
 function getStatements(breakdowns, spendingLimit) {
