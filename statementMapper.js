@@ -24,10 +24,18 @@ function mapCaisseDepargneStatements(originalStatements, balance, mappedStatemen
   const debitAmountNumber = debitAmount ? parseFloat(debitAmount) : 0;
   const creditAmountNumber = creditAmount ? parseFloat(creditAmount) : 0;
   const newBalance = balanceNumber - debitAmountNumber - creditAmountNumber;
-
   const absoluteDebitAmount = debitAmount.replace('-', '');
   const absoluteCreditAmount = creditAmount.replace('+', '');
-  const mappedStatement = `${date},UN,${label},${absoluteDebitAmount},${absoluteCreditAmount},${balanceNumber.toFixed(2)}`;
+
+
+  const [___, day, month, year] = date.match(/(\d\d)\/(\d\d)\/(\d\d)/);
+  const parsedDate = new Date(`${month}/${day}/${year}`);
+  const fullYear = parsedDate.getFullYear();
+  const standardDate = `${day}/${month}/${fullYear}`;
+
+  const standardLabel = label.replace(/CB (.*?) FACT \d*/, '$1');
+
+  const mappedStatement = `${standardDate},UN,${standardLabel},${absoluteDebitAmount},${absoluteCreditAmount},${balanceNumber.toFixed(2)}`;
   const newMappedStatements = [
     ...mappedStatements,
     mappedStatement
