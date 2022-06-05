@@ -26,16 +26,19 @@ function getCredits(statement, breakdown) {
 }
 
 function getBills(statement, breakdown) {
-  const statementIfBill = statementUtils.statementIfBill(statement)
-  if (statementIfBill) {
+  const statementIfBill = statementUtils.statementIfBill(statement);
+  const rawAmount = statement['Debit Amount'];
+  if (statementIfBill && rawAmount) {
     return breakdown.bills.concat([statementIfBill]);
   }
   return breakdown.bills;
 }
 
 function sumBills(statement, breakdown) {
-  if (statementUtils.statementIfBill(statement)) {
-    return breakdown.billsTotal + parseFloat(statement['Debit Amount']);
+  const statementIfBill = statementUtils.statementIfBill(statement);
+  const rawAmount = statement['Debit Amount'];
+  if (statementIfBill && rawAmount) {
+    return breakdown.billsTotal + parseFloat(rawAmount);
   }
   return breakdown.billsTotal;
 }

@@ -57,8 +57,8 @@ function mapCaisseDepargneOld(rawStatements) {
 
 function sortCaisseDepargneStatements(statements) {
   return statements.sort((statement1, statement2) => {
-    const [_, year1, month1, day1] = statement1.match(/.*?,(\d\d\d\d)-(\d\d)-(\d\d),/);
-    const [__, year2, month2, day2] = statement2.match(/.*?,(\d\d\d\d)-(\d\d)-(\d\d),/);
+    const [_, year1, month1, day1] = statement1.match(/.*?:(\d\d\d\d)-(\d\d)-(\d\d):/);
+    const [__, year2, month2, day2] = statement2.match(/.*?:(\d\d\d\d)-(\d\d)-(\d\d):/);
     const dateObj1 = new Date(`${month1}/${day1}/${year1}`);
     const dateObj2 = new Date(`${month2}/${day2}/${year2}`);
     if (dateObj1 > dateObj2) {
@@ -82,9 +82,11 @@ function mapCaisseDepargneStatements(originalStatements, balance, mappedStatemen
   const [
     _,
     date,
-    label,
+    category,
+    label1,
+    label2,
     amount
-  ] = statement.match(/.*?,(.*?),.*?,.*?,(.*?),(.*?),/);
+  ] = statement.match(/.*?:(.*?):(.*?):(.*?):(.*?):(.*?):/);
   const balanceNumber = parseFloat(balance);
   const amountNumber = parseFloat(amount);
   const newBalance = balanceNumber - amountNumber;
@@ -94,7 +96,10 @@ function mapCaisseDepargneStatements(originalStatements, balance, mappedStatemen
   const [___, year, month, day] = date.match(/(\d\d\d\d)-(\d\d)-(\d\d)/);
   const standardDate = `${day}/${month}/${year}`;
 
-  const mappedStatement = `${standardDate},UN,${label},${absoluteDebitAmount},${absoluteCreditAmount},${balanceNumber.toFixed(2)}`;
+  const finalLabel = label1 === label2 ? label1 : `${label1} / ${label2}`;
+  const escapedCategory = category.replace(/,/g, '&#44;');
+
+  const mappedStatement = `${standardDate},${escapedCategory},${finalLabel},${absoluteDebitAmount},${absoluteCreditAmount},${balanceNumber.toFixed(2)}`;
   const newMappedStatements = [
     ...mappedStatements,
     mappedStatement
