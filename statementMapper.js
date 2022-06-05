@@ -57,8 +57,8 @@ function mapCaisseDepargneOld(rawStatements) {
 
 function sortCaisseDepargneStatements(statements) {
   return statements.sort((statement1, statement2) => {
-    const [_, day1, month1, year1] = statement1.match(/(\d\d)\/(\d\d)\/(\d\d\d\d),/);
-    const [__, day2, month2, year2] = statement2.match(/(\d\d)\/(\d\d)\/(\d\d\d\d),/);
+    const [_, year1, month1, day1] = statement1.match(/.*?,(\d\d\d\d)-(\d\d)-(\d\d),/);
+    const [__, year2, month2, day2] = statement2.match(/.*?,(\d\d\d\d)-(\d\d)-(\d\d),/);
     const dateObj1 = new Date(`${month1}/${day1}/${year1}`);
     const dateObj2 = new Date(`${month2}/${day2}/${year2}`);
     if (dateObj1 > dateObj2) {
@@ -106,10 +106,10 @@ function mapCaisseDepargne(rawStatements) {
   const lines = rawStatements.split('\n');
   const finalBalance = lines[0];
   const originalStatements = lines.slice(2, lines.length - 1);
-  const mappedStatements = mapCaisseDepargneStatements(originalStatements, finalBalance);
-  const sortedStatements = sortCaisseDepargneStatements(mappedStatements);
+  const sortedStatements = sortCaisseDepargneStatements(originalStatements);
+  const mappedStatements = mapCaisseDepargneStatements(sortedStatements, finalBalance);
   const header = 'Transaction Date,Transaction Type,Transaction Description,Debit Amount,Credit Amount,Balance\n';
-  return `${header}${sortedStatements.join('\n')}`;
+  return `${header}${mappedStatements.join('\n')}`;
 }
 
 function mapStatements(file, rawStatements) {
