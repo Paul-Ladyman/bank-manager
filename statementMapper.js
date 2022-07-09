@@ -86,7 +86,7 @@ function mapCaisseDepargneStatements(originalStatements, balance, mappedStatemen
     label1,
     label2,
     amount
-  ] = statement.match(/.*?:(.*?):(.*?):(.*?):(.*?):(.*?):/);
+  ] = statement.match(/.*?:(.*?):(.*?):.*?:(.*?):(.*?):.*?:(.*?):/);
   const balanceNumber = parseFloat(balance);
   const amountNumber = parseFloat(amount);
   const newBalance = balanceNumber - amountNumber;
