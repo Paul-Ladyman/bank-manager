@@ -6,56 +6,7 @@ function isOldCaisseDepargne(file) {
   return file.includes('caissedepargne.old');
 }
 
-function mapCaisseDepargneStatementsOld(originalStatements, balance, mappedStatements = []) {
-  if (originalStatements.length === 0) {
-    const header = 'Transaction Date,Transaction Type,Transaction Description,Debit Amount,Credit Amount,Balance\n';
-    return `${header}${mappedStatements.join('\n')}`;
-  }
-
-  const [statement, ...otherStatements] = originalStatements;
-  const [
-    _,
-    date,
-    __,
-    label,
-    debit,
-    credit
-  ] = statement.match(/(.*?);(.*?);(.*?);(.*?);(.*?);(.*?);/);
-  const debitAmount = debit.replace(',', '.');
-  const creditAmount = credit.replace(',', '.');
-
-  const balanceNumber = parseFloat(balance);
-  const debitAmountNumber = debitAmount ? parseFloat(debitAmount) : 0;
-  const creditAmountNumber = creditAmount ? parseFloat(creditAmount) : 0;
-  const newBalance = balanceNumber - debitAmountNumber - creditAmountNumber;
-  const absoluteDebitAmount = debitAmount.replace('-', '');
-  const absoluteCreditAmount = creditAmount.replace('+', '');
-
-
-  const [___, day, month, year] = date.match(/(\d\d)\/(\d\d)\/(\d\d)/);
-  const parsedDate = new Date(`${month}/${day}/${year}`);
-  const fullYear = parsedDate.getFullYear();
-  const standardDate = `${day}/${month}/${fullYear}`;
-
-  const standardLabel = label.replace(/CB (.*?) FACT \d*/, '$1');
-
-  const mappedStatement = `${standardDate},UN,${standardLabel},${absoluteDebitAmount},${absoluteCreditAmount},${balanceNumber.toFixed(2)}`;
-  const newMappedStatements = [
-    ...mappedStatements,
-    mappedStatement
-  ];
-  return mapCaisseDepargneStatementsOld(otherStatements, newBalance, newMappedStatements);
-}
-
-function mapCaisseDepargneOld(rawStatements) {
-  const lines = rawStatements.split('\n');
-  const finalBalanceLine = lines[3];
-  const finalBalance = finalBalanceLine.replace(/.*?(\d*),(\d*)/, '$1.$2');
-  const originalStatements = lines.slice(5, lines.length - 1);
-  return mapCaisseDepargneStatementsOld(originalStatements, finalBalance);
-}
-
-function sortCaisseDepargneStatements(statements) {
+function sortCaisseDepargneStatementsOld(statements) {
   return statements.sort((statement1, statement2) => {
     const [_, year1, month1, day1] = statement1.match(/.*?:(\d\d\d\d)-(\d\d)-(\d\d):/);
     const [__, year2, month2, day2] = statement2.match(/.*?:(\d\d\d\d)-(\d\d)-(\d\d):/);
@@ -73,7 +24,7 @@ function sortCaisseDepargneStatements(statements) {
   });
 }
 
-function mapCaisseDepargneStatements(originalStatements, balance, mappedStatements = []) {
+function mapCaisseDepargneStatementsOld(originalStatements, balance, mappedStatements = []) {
   if (originalStatements.length === 0) {
     return mappedStatements;
   }
@@ -100,6 +51,71 @@ function mapCaisseDepargneStatements(originalStatements, balance, mappedStatemen
   const escapedCategory = category.replace(/,/g, '&#44;');
 
   const mappedStatement = `${standardDate},${escapedCategory},${finalLabel},${absoluteDebitAmount},${absoluteCreditAmount},${balanceNumber.toFixed(2)}`;
+  const newMappedStatements = [
+    ...mappedStatements,
+    mappedStatement
+  ];
+  return mapCaisseDepargneStatementsOld(otherStatements, newBalance, newMappedStatements);
+}
+
+function mapCaisseDepargneOld(rawStatements) {
+  const lines = rawStatements.split('\n');
+  const finalBalance = lines[0];
+  const originalStatements = lines.slice(2, lines.length - 1);
+  const sortedStatements = sortCaisseDepargneStatementsOld(originalStatements);
+  const mappedStatements = mapCaisseDepargneStatementsOld(sortedStatements, finalBalance);
+  const header = 'Transaction Date,Transaction Type,Transaction Description,Debit Amount,Credit Amount,Balance\n';
+  return `${header}${mappedStatements.join('\n')}`;
+}
+
+function sortCaisseDepargneStatements(statements) {
+  return statements.sort((statement1, statement2) => {
+    const [_, year1, month1, day1] = statement1.match(/^(\d\d\d\d)\/(\d\d)\/(\d\d):/);
+    const [__, year2, month2, day2] = statement2.match(/^(\d\d\d\d)\/(\d\d)\/(\d\d):/);
+    const dateObj1 = new Date(`${month1}/${day1}/${year1}`);
+    const dateObj2 = new Date(`${month2}/${day2}/${year2}`);
+    if (dateObj1 > dateObj2) {
+      return -1;
+    }
+
+    if (dateObj1 < dateObj2) {
+      return 1;
+    }
+
+    return 0;
+  });
+}
+
+function mapCaisseDepargneStatements(originalStatements, balance, mappedStatements = []) {
+  if (originalStatements.length === 0) {
+    return mappedStatements;
+  }
+
+  const [statement, ...otherStatements] = originalStatements;
+  const [
+    _,
+    date,
+    simpleLabel,
+    operationLabel,
+    category,
+    debit,
+    credit
+  ] = statement.match(/^(.*?):(.*?):(.*?):.*?:.*?:.*?:.*?:(.*?):(.*?):(.*?):/);
+
+  const balanceNumber = parseFloat(balance);
+  const debitNumber = debit ? parseFloat(debit) : 0.0;
+  const creditNumber = credit ? parseFloat(credit) : 0.0;
+  const newBalance = balanceNumber - debitNumber - creditNumber;
+  const absoluteDebit = debit.replace('-', '');
+  const absoluteCredit = credit.replace('+', '');
+
+  const [___, year, month, day] = date.match(/(\d\d\d\d)\/(\d\d)\/(\d\d)/);
+  const standardDate = `${day}/${month}/${year}`;
+
+  const finalLabel = operationLabel === simpleLabel ? operationLabel : `${operationLabel} / ${simpleLabel}`;
+  const escapedCategory = category.replace(/,/g, '&#44;');
+
+  const mappedStatement = `${standardDate},${escapedCategory},${finalLabel},${absoluteDebit},${absoluteCredit},${balanceNumber.toFixed(2)}`;
   const newMappedStatements = [
     ...mappedStatements,
     mappedStatement
