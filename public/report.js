@@ -72,11 +72,13 @@ function getReport(breakdowns, spendingLimit) {
       { description: 'Transport', value: breakdown.transportTotal.toFixed(2) },
     ], 'report-items__debit');
 
-    reportContainer(
-      'Largest Debit (excl. rent and savings)',
-      'report-items__debit',
-      [{ description: breakdown.largestDebit['Transaction Description'], value: breakdown.largestDebit['Debit Amount'] }]
-    );
+    if (breakdown.largestDebit) {
+      reportContainer(
+        'Largest Debit (excl. rent and savings)',
+        'report-items__debit',
+        [{ description: breakdown.largestDebit['Transaction Description'], value: breakdown.largestDebit['Debit Amount'] }]
+      );
+    }
 
     if (breakdown.utilities.length > 0) {
       reportContainer(

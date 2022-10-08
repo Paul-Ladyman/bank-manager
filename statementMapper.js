@@ -96,11 +96,10 @@ function mapCaisseDepargneStatements(originalStatements, balance, mappedStatemen
     _,
     date,
     simpleLabel,
-    operationLabel,
     category,
     debit,
     credit
-  ] = statement.match(/^(.*?):(.*?):(.*?):.*?:.*?:.*?:.*?:(.*?):(.*?):(.*?):/);
+  ] = statement.match(/^(.*?):(.*?):.*?:.*?:.*?:.*?:.*?:(.*?):(.*?):(.*?):/);
 
   const balanceNumber = parseFloat(balance);
   const debitNumber = debit ? parseFloat(debit) : 0.0;
@@ -112,10 +111,9 @@ function mapCaisseDepargneStatements(originalStatements, balance, mappedStatemen
   const [___, year, month, day] = date.match(/(\d\d\d\d)\/(\d\d)\/(\d\d)/);
   const standardDate = `${day}/${month}/${year}`;
 
-  const finalLabel = operationLabel === simpleLabel ? operationLabel : `${operationLabel} / ${simpleLabel}`;
   const escapedCategory = category.replace(/,/g, '&#44;');
 
-  const mappedStatement = `${standardDate},${escapedCategory},${finalLabel},${absoluteDebit},${absoluteCredit},${balanceNumber.toFixed(2)}`;
+  const mappedStatement = `${standardDate},${escapedCategory},${simpleLabel},${absoluteDebit},${absoluteCredit},${balanceNumber.toFixed(2)}`;
   const newMappedStatements = [
     ...mappedStatements,
     mappedStatement
